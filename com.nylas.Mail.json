@@ -1,0 +1,75 @@
+{
+    "app-id": "com.nylas.Mail",
+    "base": "io.atom.electron.BaseApp",
+    "base-version": "lts",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "1.6",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "nylas",
+    "tags": ["nightly"],
+    "desktop-file-name-prefix": "(Nightly) ",
+    "finish-args": [
+        "--device=dri",
+        "--share=ipc",
+        "--share=network",
+        "--socket=pulseaudio",
+        "--socket=x11",
+        "--socket=wayland",
+        "--talk-name=org.freedesktop.secrets"
+    ],
+    "modules": [
+        {
+            "name": "xkbfile",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.x.org/releases/individual/lib/libxkbfile-1.0.9.tar.bz2",
+                    "sha256": "51817e0530961975d9513b773960b4edd275f7d5c72293d5a151ed4f42aeb16a"
+                }
+            ]
+        },
+        {
+            "name": "libgnome-keyring",
+            "config-opts": [ "--disable-static", "--disable-gtk-doc", "--disable-coverage",
+                             "--disable-introspection" ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/libgnome-keyring/3.12/libgnome-keyring-3.12.0.tar.xz",
+                    "sha256": "c4c178fbb05f72acc484d22ddb0568f7532c409b0a13e06513ff54b91e947783"
+                },
+                {
+                    "type": "patch",
+                    "path": "libgnome-keyring/libgnome-keyring-detect-gcrypt.patch"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "autoreconf -fi"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "nylas",
+            "no-autogen": true,
+            "build-options": {
+                "build-args": [
+                    "--share=network"
+                ]
+            },
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/nylas/nylas-mail",
+                    "branch": "master"
+                },
+                {
+                    "path": "nylas-Makefile",
+                    "type": "file",
+                    "dest-filename": "Makefile"
+                }
+            ]
+        }
+    ]
+}

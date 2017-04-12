@@ -1,0 +1,18 @@
+all:
+	npm install
+	# It would fail when fakeroot is not available, but it would build necessary files
+	npm run build-client || true
+
+install:
+
+	cp -r packages/client-app/dist/nylas-linux-x64/ /app/share/nylas
+	ln -s /app/share/nylas/nylas /app/bin/nylas
+
+	sed -i 's;usr;app;g' packages/client-app/dist/nylas-mail.desktop
+	mkdir -p /app/share/applications
+	cp packages/client-app/dist/nylas-mail.desktop /app/share/applications/com.nylas.Mail.desktop
+
+	mkdir -p /app/share/icons/hicolor/256x256/apps
+	cp ./packages/client-app/build/resources/linux/icons/256.png /app/share/icons/hicolor/256x256/apps/com.nylas.Mail.png
+
+.PHONY: all install
